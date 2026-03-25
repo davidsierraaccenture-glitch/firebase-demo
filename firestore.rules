@@ -1,0 +1,75 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // === Helper functions ===
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function validString(field, maxLen) {
+      return field is string && field.size() > 0 && field.size() <= maxLen;
+    }
+
+    // === Users ===
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isOwner(userId) &&
+        validString(request.resource.data.name, 100) &&
+        validString(request.resource.data.email, 254) &&
+        request.resource.data.role == "customer";
+      allow update: if isOwner(userId) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(["role", "active", "orderCount", "createdAt"]);
+      allow delete: if isAdmin();
+    }
+
+    // === Products ===
+    match /products/{productId} {
+      // Anyone can read active products
+      allow read: if true;
+
+      // Only admin SDK (Cloud Functions) manages products
+      allow write: if false;
+
+      // Reviews subcollection
+      match /reviews/{reviewId} {
+        allow read: if true;
+
+        // Demo: allow review creation without auth
+        // Production: require isSignedIn()
+        allow create: if
+          validString(request.resource.data.userName, 100) &&
+          request.resource.data.rating is int &&
+          request.resource.data.rating >= 1 &&
+          request.resource.data.rating <= 5 &&
+          validString(request.resource.data.comment, 500);
+
+        allow update, delete: if false;
+      }
+    }
+
+    // === Orders ===
+    // All order operations go through Cloud Functions (admin SDK bypasses rules)
+    match /orders/{orderId} {
+      allow read: if false;
+      allow write: if false;
+    }
+
+    // === Store config ===
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

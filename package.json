@@ -1,0 +1,12 @@
+{
+  "name": "firebase-demo",
+  "private": true,
+  "scripts": {
+    "seed:firestore": "node seed-firestore.js",
+    "seed:storage": "node seed-storage.js",
+    "seed": "node seed-firestore.js && node seed-storage.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.6.0"
+  }
+}
