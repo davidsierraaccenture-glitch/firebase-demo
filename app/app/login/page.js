@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../../lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../lib/firebase";
 import { useAuth } from "../../components/AuthProvider";
 import Toast, { showToast } from "../../components/Toast";
 
@@ -31,6 +32,13 @@ export default function LoginPage() {
         if (displayName) {
           await updateProfile(cred.user, { displayName });
         }
+        await setDoc(doc(db, "users", cred.user.uid), {
+          name: displayName || email,
+          email,
+          role: "customer",
+          orderCount: 0,
+          createdAt: new Date(),
+        });
         showToast("Account created!");
       } else {
         await signInWithEmailAndPassword(auth, email, password);

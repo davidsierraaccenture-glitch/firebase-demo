@@ -52,7 +52,7 @@ export default function CartPage() {
     };
 
     try {
-      const result = await apiPost("/orders", { items, customer });
+      const result = await apiPost("/orders", { items, customer, uid: user.uid });
       clearCart();
       setCart([]);
       setOrder({ id: result.orderId, total: result.total, customerName: customer.name });

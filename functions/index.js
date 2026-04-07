@@ -109,7 +109,7 @@ exports.api = onRequest(async (req, res) => {
 
     // POST /api/orders
     if (req.method === "POST" && route === "orders") {
-      const {items, customer} = req.body;
+      const {items, customer, uid} = req.body;
       if (!items || !items.length || !customer) {
         res.status(400).json({error: "Missing required fields: items, customer"});
         return;
@@ -152,6 +152,7 @@ exports.api = onRequest(async (req, res) => {
           email: customer.email,
           address: customer.address || null,
         },
+        uid: uid || null,
         subtotal,
         tax,
         total,
@@ -161,7 +162,19 @@ exports.api = onRequest(async (req, res) => {
       };
 
       const ref = await db.collection("orders").add(order);
-      logger.info(`Order created: ${ref.id}, total: $${total}`);
+
+      // Update user's order count if uid is provided
+      if (uid) {
+        const userRef = db.collection("users").doc(uid);
+        const userDoc = await userRef.get();
+        if (userDoc.exists) {
+          await userRef.update({
+            orderCount: FieldValue.increment(1),
+          });
+        }
+      }
+
+      logger.info(`Order created: ${ref.id}, total: $${total}, user: ${uid || "anonymous"}`);
       res.status(201).json({message: "Order placed", orderId: ref.id, ...order});
       return;
     }
