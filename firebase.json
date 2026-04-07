@@ -19,14 +19,15 @@
       ]
     }
   ],
-  "hosting": {
-    "public": "public",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "/api/**",
-        "function": "api"
-      }
+  "apphosting": {
+    "backendId": "firebase-demo",
+    "rootDir": "app",
+    "ignore": [
+      "node_modules",
+      ".git",
+      "firebase-debug.log",
+      "firebase-debug.*.log",
+      "functions"
     ]
   },
   "storage": {
