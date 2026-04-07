@@ -6,10 +6,12 @@ import { getCart, updateCartQuantity, removeFromCart, clearCart } from "../../li
 import { formatPrice } from "../../lib/utils";
 import { apiPost } from "../../lib/api";
 import Toast, { showToast } from "../../components/Toast";
+import { useAuth } from "../../components/AuthProvider";
 
 const TAX_RATE = 0.08;
 
 export default function CartPage() {
+  const { user } = useAuth();
   const [cart, setCart] = useState(getCart());
   const [order, setOrder] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -126,39 +128,46 @@ export default function CartPage() {
         <div className="summary-row total"><span>Total</span><span>{formatPrice(total)}</span></div>
       </div>
 
-      <div className="checkout-form">
-        <h2>Checkout</h2>
-        <form onSubmit={handleCheckout}>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="cust-name">Full Name</label>
-              <input type="text" id="cust-name" name="name" required />
+      {user ? (
+        <div className="checkout-form">
+          <h2>Checkout</h2>
+          <form onSubmit={handleCheckout}>
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="cust-name">Full Name</label>
+                <input type="text" id="cust-name" name="name" required defaultValue={user.displayName || ""} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="cust-email">Email</label>
+                <input type="email" id="cust-email" name="email" required defaultValue={user.email || ""} />
+              </div>
             </div>
             <div className="form-group">
-              <label htmlFor="cust-email">Email</label>
-              <input type="email" id="cust-email" name="email" required />
+              <label htmlFor="cust-address">Street Address</label>
+              <input type="text" id="cust-address" name="address" />
             </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="cust-address">Street Address</label>
-            <input type="text" id="cust-address" name="address" />
-          </div>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="cust-city">City</label>
-              <input type="text" id="cust-city" name="city" />
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="cust-city">City</label>
+                <input type="text" id="cust-city" name="city" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="cust-state">State</label>
+                <input type="text" id="cust-state" name="state" />
+              </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="cust-state">State</label>
-              <input type="text" id="cust-state" name="state" />
-            </div>
-          </div>
-          <br />
-          <button type="submit" className="btn btn-primary" disabled={submitting}>
-            {submitting ? "Processing..." : "Place Order"}
-          </button>
-        </form>
-      </div>
+            <br />
+            <button type="submit" className="btn btn-primary" disabled={submitting}>
+              {submitting ? "Processing..." : "Place Order"}
+            </button>
+          </form>
+        </div>
+      ) : (
+        <div className="checkout-form auth-prompt">
+          <h2>Checkout</h2>
+          <p><Link href="/login">Sign in</Link> to place your order.</p>
+        </div>
+      )}
       <Toast />
     </main>
   );

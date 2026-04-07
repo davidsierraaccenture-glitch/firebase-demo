@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useAuth } from "./AuthProvider";
 
 export default function Header() {
   const pathname = usePathname();
+  const { user, loading, signOut } = useAuth();
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
@@ -35,6 +37,18 @@ export default function Header() {
           <Link href="/cart" className={`cart-link ${pathname === "/cart" ? "active" : ""}`}>
             🛒 {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </Link>
+          {!loading && (
+            user ? (
+              <div className="auth-nav">
+                <span className="user-name">{user.displayName || user.email}</span>
+                <button className="btn-sign-out" onClick={signOut}>Sign Out</button>
+              </div>
+            ) : (
+              <Link href="/login" className={pathname === "/login" ? "active" : ""}>
+                Sign In
+              </Link>
+            )
+          )}
         </nav>
       </div>
     </header>

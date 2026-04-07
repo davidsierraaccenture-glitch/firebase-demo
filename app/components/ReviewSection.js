@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { renderStars } from "../lib/utils";
 import { apiPost } from "../lib/api";
 import { showToast } from "./Toast";
+import { useAuth } from "./AuthProvider";
 
 export default function ReviewSection({ productId, initialReviews }) {
+  const { user } = useAuth();
   const [reviews, setReviews] = useState(initialReviews);
-  const [name, setName] = useState("");
   const [rating, setRating] = useState("5");
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -16,18 +18,19 @@ export default function ReviewSection({ productId, initialReviews }) {
     e.preventDefault();
     setSubmitting(true);
 
+    const userName = user.displayName || user.email;
+
     try {
       await apiPost("/reviews", {
         productId,
-        userName: name,
+        userName,
         rating: parseInt(rating),
         comment,
       });
       setReviews([
-        { userName: name, rating: parseInt(rating), comment, createdAt: new Date().toISOString() },
+        { userName, rating: parseInt(rating), comment, createdAt: new Date().toISOString() },
         ...reviews,
       ]);
-      setName("");
       setRating("5");
       setComment("");
       showToast("Review submitted!");
@@ -53,32 +56,39 @@ export default function ReviewSection({ productId, initialReviews }) {
         </div>
       ))}
 
-      <div className="review-form">
-        <h3>Write a Review</h3>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="rev-name">Your Name</label>
-            <input id="rev-name" type="text" required maxLength={100} value={name} onChange={(e) => setName(e.target.value)} />
-          </div>
-          <div className="form-group">
-            <label htmlFor="rev-rating">Rating</label>
-            <select id="rev-rating" required value={rating} onChange={(e) => setRating(e.target.value)}>
-              <option value="5">★★★★★ (5)</option>
-              <option value="4">★★★★☆ (4)</option>
-              <option value="3">★★★☆☆ (3)</option>
-              <option value="2">★★☆☆☆ (2)</option>
-              <option value="1">★☆☆☆☆ (1)</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="rev-comment">Comment</label>
-            <textarea id="rev-comment" required maxLength={500} placeholder="Share your experience..." value={comment} onChange={(e) => setComment(e.target.value)} />
-          </div>
-          <button type="submit" className="btn btn-primary" disabled={submitting}>
-            {submitting ? "Submitting..." : "Submit Review"}
-          </button>
-        </form>
-      </div>
+      {user ? (
+        <div className="review-form">
+          <h3>Write a Review</h3>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Reviewing as</label>
+              <p className="auth-user-label">{user.displayName || user.email}</p>
+            </div>
+            <div className="form-group">
+              <label htmlFor="rev-rating">Rating</label>
+              <select id="rev-rating" required value={rating} onChange={(e) => setRating(e.target.value)}>
+                <option value="5">★★★★★ (5)</option>
+                <option value="4">★★★★☆ (4)</option>
+                <option value="3">★★★☆☆ (3)</option>
+                <option value="2">★★☆☆☆ (2)</option>
+                <option value="1">★☆☆☆☆ (1)</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="rev-comment">Comment</label>
+              <textarea id="rev-comment" required maxLength={500} placeholder="Share your experience..." value={comment} onChange={(e) => setComment(e.target.value)} />
+            </div>
+            <button type="submit" className="btn btn-primary" disabled={submitting}>
+              {submitting ? "Submitting..." : "Submit Review"}
+            </button>
+          </form>
+        </div>
+      ) : (
+        <div className="review-form auth-prompt">
+          <h3>Write a Review</h3>
+          <p><Link href="/login">Sign in</Link> to leave a review.</p>
+        </div>
+      )}
     </div>
   );
 }

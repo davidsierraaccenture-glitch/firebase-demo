@@ -188,6 +188,32 @@ nav a:hover, nav a.active { color: white; }
 .footer { background: var(--primary); color: rgba(255,255,255,0.6); text-align: center; padding: 24px; margin-top: auto; font-size: 0.9rem; }
 .footer a { color: rgba(255,255,255,0.8); }
 
+/* === Auth === */
+.auth-nav { display: flex; align-items: center; gap: 12px; }
+.user-name { color: rgba(255,255,255,0.9); font-size: 0.9rem; font-weight: 500; }
+.btn-sign-out {
+  background: transparent; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.8);
+  padding: 6px 14px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
+}
+.btn-sign-out:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.5); color: white; }
+
+.auth-page { display: flex; justify-content: center; align-items: center; min-height: 60vh; }
+.auth-card {
+  background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 40px; width: 100%; max-width: 420px;
+}
+.auth-card h1 { font-size: 1.8rem; margin-bottom: 4px; }
+.auth-subtitle { color: var(--text-light); margin-bottom: 24px; font-size: 0.95rem; }
+.auth-btn { width: 100%; justify-content: center; margin-top: 8px; }
+.auth-toggle { text-align: center; margin-top: 20px; color: var(--text-light); font-size: 0.9rem; }
+.link-btn { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+.link-btn:hover { color: var(--accent-hover); }
+
+.auth-user-label { font-weight: 600; color: var(--text); margin: 0; }
+.auth-prompt { text-align: center; padding: 32px; }
+.auth-prompt p { color: var(--text-light); font-size: 1rem; }
+.auth-prompt a { font-weight: 600; }
+
 /* === Responsive === */
 @media (max-width: 768px) {
   .product-detail { grid-template-columns: 1fr; gap: 24px; }

@@ -181,7 +181,16 @@ exports.healthCheck = onRequest((req, res) => {
 // Trigger: new order created
 exports.onOrderCreated = onDocumentCreated("orders/{orderId}", async (event) => {
   const order = event.data.data();
-  logger.info(`New order ${event.params.orderId}: $${order.total} (${order.items.length} items)`);
+  const orderId = event.params.orderId;
+  logger.info(`New order ${orderId}: $${order.total} (${order.items.length} items)`);
+
+  await db.collection("notifications").add({
+    type: "new_order",
+    orderId,
+    message: `New order from ${order.customer.name} — ${order.items.length} item(s), $${order.total}`,
+    read: false,
+    createdAt: new Date(),
+  });
 });
 
 // Trigger: order updated
