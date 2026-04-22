@@ -21,15 +21,17 @@ export default function ReviewSection({ productId, initialReviews }) {
     }
     setSubmitting(true);
 
+    const userName = user.displayName || user.email;
+
     try {
       await apiPost("/reviews", {
         productId,
-        userName: user.displayName || "Anonymous",
+        userName,
         rating: parseInt(rating),
         comment,
       });
       setReviews([
-        { userName: user.displayName, rating: parseInt(rating), comment, createdAt: new Date().toISOString() },
+        { userName, rating: parseInt(rating), comment, createdAt: new Date().toISOString() },
         ...reviews,
       ]);
       setRating("5");
@@ -57,12 +59,12 @@ export default function ReviewSection({ productId, initialReviews }) {
         </div>
       ))}
 
-      <div className="review-form">
-        <h3>Write a Review</h3>
-        {user ? (
+      {user ? (
+        <div className="review-form">
+          <h3>Write a Review</h3>
           <form onSubmit={handleSubmit}>
             <p style={{ marginBottom: "16px", color: "var(--text-light)" }}>
-              Posting as <strong>{user.displayName}</strong>
+              Posting as <strong>{user.displayName || user.email}</strong>
             </p>
             <div className="form-group">
               <label htmlFor="rev-rating">Rating</label>
@@ -82,13 +84,14 @@ export default function ReviewSection({ productId, initialReviews }) {
               {submitting ? "Submitting..." : "Submit Review"}
             </button>
           </form>
-        ) : (
-          <div style={{ textAlign: "center", padding: "24px" }}>
-            <p style={{ marginBottom: "12px", color: "var(--text-light)" }}>Sign in to write a review</p>
-            <button className="btn btn-primary" onClick={login}>Sign in with Google</button>
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="review-form" style={{ textAlign: "center", padding: "32px" }}>
+          <h3>Write a Review</h3>
+          <p style={{ marginBottom: "12px", color: "var(--text-light)" }}>Sign in to leave a review</p>
+          <button className="btn btn-primary" onClick={login}>Sign in with Google</button>
+        </div>
+      )}
     </div>
   );
 }

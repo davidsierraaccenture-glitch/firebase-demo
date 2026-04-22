@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
+import { onAuthStateChanged, signInWithPopup, signOut as firebaseSignOut } from "firebase/auth";
 import { auth, googleProvider } from "../lib/firebase";
 
 const AuthContext = createContext(null);
@@ -11,11 +11,10 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    return onAuthStateChanged(auth, (u) => {
+      setUser(u);
       setLoading(false);
     });
-    return unsubscribe;
   }, []);
 
   async function login() {
@@ -28,7 +27,7 @@ export function AuthProvider({ children }) {
 
   async function logout() {
     try {
-      await signOut(auth);
+      await firebaseSignOut(auth);
     } catch (err) {
       console.error("Logout failed:", err);
     }

@@ -22,6 +22,7 @@ service cloud.firestore {
       return field is string && field.size() > 0 && field.size() <= maxLen;
     }
 
+
     // === Users ===
     match /users/{userId} {
       allow read: if isSignedIn();

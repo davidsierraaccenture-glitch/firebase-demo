@@ -131,7 +131,7 @@ exports.api = onRequest(async (req, res) => {
         res.status(401).json({error: "Sign in required to place an order"});
         return;
       }
-      const {items, customer} = req.body;
+      const {items, customer, uid} = req.body;
       if (!items || !items.length || !customer) {
         res.status(400).json({error: "Missing required fields: items, customer"});
         return;
@@ -174,6 +174,7 @@ exports.api = onRequest(async (req, res) => {
           email: customer.email,
           address: customer.address || null,
         },
+        uid: uid || null,
         subtotal,
         tax,
         total,
@@ -183,7 +184,19 @@ exports.api = onRequest(async (req, res) => {
       };
 
       const ref = await db.collection("orders").add(order);
-      logger.info(`Order created: ${ref.id}, total: $${total}`);
+
+      // Update user's order count if uid is provided
+      if (uid) {
+        const userRef = db.collection("users").doc(uid);
+        const userDoc = await userRef.get();
+        if (userDoc.exists) {
+          await userRef.update({
+            orderCount: FieldValue.increment(1),
+          });
+        }
+      }
+
+      logger.info(`Order created: ${ref.id}, total: $${total}, user: ${uid || "anonymous"}`);
       res.status(201).json({message: "Order placed", orderId: ref.id, ...order});
       return;
     }
@@ -203,7 +216,16 @@ exports.healthCheck = onRequest((req, res) => {
 // Trigger: new order created
 exports.onOrderCreated = onDocumentCreated("orders/{orderId}", async (event) => {
   const order = event.data.data();
-  logger.info(`New order ${event.params.orderId}: $${order.total} (${order.items.length} items)`);
+  const orderId = event.params.orderId;
+  logger.info(`New order ${orderId}: $${order.total} (${order.items.length} items)`);
+
+  await db.collection("notifications").add({
+    type: "new_order",
+    orderId,
+    message: `New order from ${order.customer.name} — ${order.items.length} item(s), $${order.total}`,
+    read: false,
+    createdAt: new Date(),
+  });
 });
 
 // Trigger: order updated

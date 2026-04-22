@@ -40,7 +40,8 @@ export default function Header() {
           {!loading && (
             user ? (
               <span className="user-menu">
-                <img src={user.photoURL} alt="" className="user-avatar" referrerPolicy="no-referrer" />
+                {user.photoURL && <img src={user.photoURL} alt="" className="user-avatar" referrerPolicy="no-referrer" />}
+                <span className="user-name">{user.displayName || user.email}</span>
                 <button onClick={logout} className="auth-btn">Sign Out</button>
               </span>
             ) : (

@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"./fir-demo-69c51-firebase-adminsdk-fbsvc-80d3481407.json\" node seed-firestore.js)",
+      "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"./fir-demo-69c51-firebase-adminsdk-fbsvc-80d3481407.json\" node seed-storage.js)",
+      "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"./fir-demo-69c51-firebase-adminsdk-fbsvc-80d3481407.json\" node cleanup-english.js)",
+      "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"./fir-demo-69c51-firebase-adminsdk-fbsvc-80d3481407.json\" node fix-resenas.js)",
+      "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"./fir-demo-69c51-firebase-adminsdk-fbsvc-80d3481407.json\" node cleanup-old.js)",
+      "Bash(npx create-next-app@latest app --js --no-tailwind --no-eslint --no-turbopack --no-src-dir --app --no-import-alias)",
+      "Bash(npx next:*)",
+      "Bash(firebase apphosting:backends:get firebase-demo --project fir-demo-69c51)",
+      "Bash(firebase apphosting:rollouts:list firebase-demo --project fir-demo-69c51)",
+      "Bash(gcloud builds:*)",
+      "Bash(firebase deploy:*)",
+      "WebFetch(domain:console.cloud.google.com)",
+      "Bash(cd:*)",
+      "Bash(rm:*)"
+    ]
+  }
+}

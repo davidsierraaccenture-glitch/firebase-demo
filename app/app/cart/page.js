@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { getCart, updateCartQuantity, removeFromCart, clearCart } from "../../lib/cart";
 import { formatPrice } from "../../lib/utils";
@@ -56,7 +56,7 @@ export default function CartPage() {
     };
 
     try {
-      const result = await apiPost("/orders", { items, customer });
+      const result = await apiPost("/orders", { items, customer, uid: user.uid });
       clearCart();
       setCart([]);
       setOrder({ id: result.orderId, total: result.total, customerName: customer.name });
@@ -132,9 +132,9 @@ export default function CartPage() {
         <div className="summary-row total"><span>Total</span><span>{formatPrice(total)}</span></div>
       </div>
 
-      <div className="checkout-form">
-        <h2>Checkout</h2>
-        {user ? (
+      {user ? (
+        <div className="checkout-form">
+          <h2>Checkout</h2>
           <form onSubmit={handleCheckout}>
             <div className="form-row">
               <div className="form-group">
@@ -165,13 +165,14 @@ export default function CartPage() {
               {submitting ? "Processing..." : "Place Order"}
             </button>
           </form>
-        ) : (
-          <div style={{ textAlign: "center", padding: "24px" }}>
-            <p style={{ marginBottom: "12px", color: "var(--text-light)" }}>Sign in to checkout</p>
-            <button className="btn btn-primary" onClick={login}>Sign in with Google</button>
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="checkout-form" style={{ textAlign: "center", padding: "32px" }}>
+          <h2>Checkout</h2>
+          <p style={{ marginBottom: "12px", color: "var(--text-light)" }}>Sign in to place your order</p>
+          <button className="btn btn-primary" onClick={login}>Sign in with Google</button>
+        </div>
+      )}
       <Toast />
     </main>
   );
