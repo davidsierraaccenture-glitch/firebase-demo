@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../../lib/firebase";
+import { auth, db, googleProvider } from "../../lib/firebase";
 import { useAuth } from "../../components/AuthProvider";
 import Toast, { showToast } from "../../components/Toast";
 
@@ -110,6 +110,24 @@ export default function LoginPage() {
               {loading ? "Please wait..." : isSignUp ? "Sign Up" : "Sign In"}
             </button>
           </form>
+
+          <div style={{ textAlign: "center", margin: "20px 0", color: "var(--text-light)" }}>or</div>
+
+          <button
+            type="button"
+            className="btn btn-outline auth-btn"
+            onClick={async () => {
+              try {
+                await signInWithPopup(auth, googleProvider);
+                showToast("Signed in with Google!");
+                router.push("/");
+              } catch (err) {
+                showToast("Google sign-in failed");
+              }
+            }}
+          >
+            Sign in with Google
+          </button>
 
           <p className="auth-toggle">
             {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}

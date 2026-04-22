@@ -11,7 +11,7 @@ import { useAuth } from "../../components/AuthProvider";
 const TAX_RATE = 0.08;
 
 export default function CartPage() {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
   const [cart, setCart] = useState(getCart());
   const [order, setOrder] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -38,10 +38,7 @@ export default function CartPage() {
 
   async function handleCheckout(e) {
     e.preventDefault();
-    if (!user) {
-      login();
-      return;
-    }
+    if (!user) return;
     setSubmitting(true);
     const formData = new FormData(e.target);
     const items = cart.map((item) => ({ productId: item.productId, quantity: item.quantity }));
@@ -170,7 +167,7 @@ export default function CartPage() {
         <div className="checkout-form" style={{ textAlign: "center", padding: "32px" }}>
           <h2>Checkout</h2>
           <p style={{ marginBottom: "12px", color: "var(--text-light)" }}>Sign in to place your order</p>
-          <button className="btn btn-primary" onClick={login}>Sign in with Google</button>
+          <Link href="/login" className="btn btn-primary">Sign In</Link>
         </div>
       )}
       <Toast />

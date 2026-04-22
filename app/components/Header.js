@@ -45,7 +45,7 @@ export default function Header() {
                 <button onClick={logout} className="auth-btn">Sign Out</button>
               </span>
             ) : (
-              <button onClick={login} className="auth-btn">Sign In</button>
+              <Link href="/login" className="auth-btn">Sign In</Link>
             )
           )}
         </nav>

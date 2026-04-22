@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { renderStars } from "../lib/utils";
 import { apiPost } from "../lib/api";
 import { showToast } from "./Toast";
 import { useAuth } from "./AuthProvider";
 
 export default function ReviewSection({ productId, initialReviews }) {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
   const [reviews, setReviews] = useState(initialReviews);
   const [rating, setRating] = useState("5");
   const [comment, setComment] = useState("");
@@ -15,10 +16,7 @@ export default function ReviewSection({ productId, initialReviews }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!user) {
-      login();
-      return;
-    }
+    if (!user) return;
     setSubmitting(true);
 
     const userName = user.displayName || user.email;
@@ -89,7 +87,7 @@ export default function ReviewSection({ productId, initialReviews }) {
         <div className="review-form" style={{ textAlign: "center", padding: "32px" }}>
           <h3>Write a Review</h3>
           <p style={{ marginBottom: "12px", color: "var(--text-light)" }}>Sign in to leave a review</p>
-          <button className="btn btn-primary" onClick={login}>Sign in with Google</button>
+          <Link href="/login" className="btn btn-primary">Sign In</Link>
         </div>
       )}
     </div>
