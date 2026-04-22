@@ -36,31 +36,23 @@ service cloud.firestore {
 
     // === Products ===
     match /products/{productId} {
-      // Anyone can read active products
       allow read: if true;
-
-      // Only admin SDK (Cloud Functions) manages products
       allow write: if false;
 
-      // Reviews subcollection
+      // Reviews subcollection — requires authentication
       match /reviews/{reviewId} {
         allow read: if true;
-
-        // Demo: allow review creation without auth
-        // Production: require isSignedIn()
-        allow create: if
+        allow create: if isSignedIn() &&
           validString(request.resource.data.userName, 100) &&
           request.resource.data.rating is int &&
           request.resource.data.rating >= 1 &&
           request.resource.data.rating <= 5 &&
           validString(request.resource.data.comment, 500);
-
         allow update, delete: if false;
       }
     }
 
     // === Orders ===
-    // All order operations go through Cloud Functions (admin SDK bypasses rules)
     match /orders/{orderId} {
       allow read: if false;
       allow write: if false;

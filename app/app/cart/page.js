@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getCart, updateCartQuantity, removeFromCart, clearCart } from "../../lib/cart";
 import { formatPrice } from "../../lib/utils";
 import { apiPost } from "../../lib/api";
 import Toast, { showToast } from "../../components/Toast";
+import { useAuth } from "../../components/AuthProvider";
 
 const TAX_RATE = 0.08;
 
 export default function CartPage() {
+  const { user, login } = useAuth();
   const [cart, setCart] = useState(getCart());
   const [order, setOrder] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -36,6 +38,10 @@ export default function CartPage() {
 
   async function handleCheckout(e) {
     e.preventDefault();
+    if (!user) {
+      login();
+      return;
+    }
     setSubmitting(true);
     const formData = new FormData(e.target);
     const items = cart.map((item) => ({ productId: item.productId, quantity: item.quantity }));
@@ -128,36 +134,43 @@ export default function CartPage() {
 
       <div className="checkout-form">
         <h2>Checkout</h2>
-        <form onSubmit={handleCheckout}>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="cust-name">Full Name</label>
-              <input type="text" id="cust-name" name="name" required />
+        {user ? (
+          <form onSubmit={handleCheckout}>
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="cust-name">Full Name</label>
+                <input type="text" id="cust-name" name="name" required defaultValue={user.displayName || ""} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="cust-email">Email</label>
+                <input type="email" id="cust-email" name="email" required defaultValue={user.email || ""} />
+              </div>
             </div>
             <div className="form-group">
-              <label htmlFor="cust-email">Email</label>
-              <input type="email" id="cust-email" name="email" required />
+              <label htmlFor="cust-address">Street Address</label>
+              <input type="text" id="cust-address" name="address" />
             </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="cust-city">City</label>
+                <input type="text" id="cust-city" name="city" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="cust-state">State</label>
+                <input type="text" id="cust-state" name="state" />
+              </div>
+            </div>
+            <br />
+            <button type="submit" className="btn btn-primary" disabled={submitting}>
+              {submitting ? "Processing..." : "Place Order"}
+            </button>
+          </form>
+        ) : (
+          <div style={{ textAlign: "center", padding: "24px" }}>
+            <p style={{ marginBottom: "12px", color: "var(--text-light)" }}>Sign in to checkout</p>
+            <button className="btn btn-primary" onClick={login}>Sign in with Google</button>
           </div>
-          <div className="form-group">
-            <label htmlFor="cust-address">Street Address</label>
-            <input type="text" id="cust-address" name="address" />
-          </div>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="cust-city">City</label>
-              <input type="text" id="cust-city" name="city" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="cust-state">State</label>
-              <input type="text" id="cust-state" name="state" />
-            </div>
-          </div>
-          <br />
-          <button type="submit" className="btn btn-primary" disabled={submitting}>
-            {submitting ? "Processing..." : "Place Order"}
-          </button>
-        </form>
+        )}
       </div>
       <Toast />
     </main>

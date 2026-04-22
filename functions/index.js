@@ -3,6 +3,7 @@ const {onRequest} = require("firebase-functions/https");
 const {onDocumentCreated, onDocumentUpdated} = require("firebase-functions/v2/firestore");
 const logger = require("firebase-functions/logger");
 const {getFirestore, FieldValue} = require("firebase-admin/firestore");
+const {getAuth} = require("firebase-admin/auth");
 const {initializeApp} = require("firebase-admin/app");
 
 initializeApp();
@@ -10,12 +11,23 @@ setGlobalOptions({maxInstances: 10});
 
 const db = getFirestore();
 
+// Helper: verify Firebase Auth token from Authorization header
+async function getUser(req) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) return null;
+  try {
+    return await getAuth().verifyIdToken(authHeader.split("Bearer ")[1]);
+  } catch {
+    return null;
+  }
+}
+
 // --- REST API ---
 exports.api = onRequest(async (req, res) => {
   // CORS
   res.set("Access-Control-Allow-Origin", "*");
   res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.set("Access-Control-Allow-Headers", "Content-Type");
+  res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
   if (req.method === "OPTIONS") {
     res.status(204).send("");
     return;
@@ -63,8 +75,13 @@ exports.api = onRequest(async (req, res) => {
       return;
     }
 
-    // POST /api/reviews
+    // POST /api/reviews (requires auth)
     if (req.method === "POST" && route === "reviews") {
+      const user = await getUser(req);
+      if (!user) {
+        res.status(401).json({error: "Sign in required to submit a review"});
+        return;
+      }
       const {productId, userName, rating, comment} = req.body;
       if (!productId || !userName || !rating || !comment) {
         res.status(400).json({error: "Missing required fields: productId, userName, rating, comment"});
@@ -107,8 +124,13 @@ exports.api = onRequest(async (req, res) => {
       return;
     }
 
-    // POST /api/orders
+    // POST /api/orders (requires auth)
     if (req.method === "POST" && route === "orders") {
+      const user = await getUser(req);
+      if (!user) {
+        res.status(401).json({error: "Sign in required to place an order"});
+        return;
+      }
       const {items, customer} = req.body;
       if (!items || !items.length || !customer) {
         res.status(400).json({error: "Missing required fields: items, customer"});
