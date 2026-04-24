@@ -17,6 +17,29 @@ const products = [
   {id: "prod4", name: "Notebook Set", color: "#8E6BB0", icon: "📓"},
   {id: "prod5", name: "LED Desk Lamp", color: "#F0AD4E", icon: "💡"},
   {id: "prod6", name: "Laptop Backpack", color: "#6C757D", icon: "🎒"},
+  // Electronics
+  {id: "prod7", name: "Bluetooth Speaker", color: "#3B7DD8", icon: "🔊"},
+  {id: "prod8", name: "USB-C Hub", color: "#5A6B7E", icon: "🔌"},
+  {id: "prod9", name: "Wireless Mouse", color: "#2D9CDB", icon: "🖱️"},
+  {id: "prod10", name: "Mechanical Keyboard", color: "#1A1A2E", icon: "⌨️"},
+  // Kitchen
+  {id: "prod11", name: "French Press", color: "#8B6914", icon: "☕"},
+  {id: "prod12", name: "Cutting Board Set", color: "#A0855B", icon: "🪵"},
+  {id: "prod13", name: "Water Bottle", color: "#2EAFD3", icon: "💧"},
+  // Sports
+  {id: "prod14", name: "Yoga Mat", color: "#7B68AE", icon: "🧘"},
+  {id: "prod15", name: "Resistance Bands", color: "#E94560", icon: "💪"},
+  {id: "prod16", name: "Jump Rope", color: "#E67E22", icon: "🏃"},
+  {id: "prod17", name: "Dumbbell Set", color: "#34495E", icon: "🏋️"},
+  // Office
+  {id: "prod18", name: "Monitor Stand", color: "#C19A6B", icon: "🖥️"},
+  {id: "prod19", name: "Desk Organizer", color: "#7F8C8D", icon: "📎"},
+  {id: "prod20", name: "Whiteboard", color: "#ECF0F1", icon: "📝"},
+  // Accessories
+  {id: "prod21", name: "Sunglasses", color: "#2C3E50", icon: "🕶️"},
+  {id: "prod22", name: "Leather Wallet", color: "#6D4C41", icon: "👛"},
+  {id: "prod23", name: "Phone Case", color: "#95A5A6", icon: "📱"},
+  {id: "prod24", name: "Travel Mug", color: "#16A085", icon: "🥤"},
 ];
 
 function generateSVG(name, color, icon) {

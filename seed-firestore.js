@@ -19,6 +19,29 @@ const products = [
   {id: "prod4", name: "Notebook Set", price: 18.99, category: "office", stock: 500, active: true, description: "Set of 3 premium lined notebooks. A5 size, 80gsm acid-free paper.", tags: ["stationery", "office", "writing"], rating: 4.6, reviewCount: 0, imageUrl: ""},
   {id: "prod5", name: "LED Desk Lamp", price: 34.99, category: "office", stock: 200, active: true, description: "Adjustable LED desk lamp with 5 brightness levels and USB charging port.", tags: ["lighting", "LED", "office"], rating: 4.7, reviewCount: 1, imageUrl: ""},
   {id: "prod6", name: "Laptop Backpack", price: 49.99, category: "accessories", stock: 0, active: false, description: "Water-resistant backpack with padded compartment for laptops up to 15 inches.", tags: ["backpack", "laptop", "travel"], rating: 4.1, reviewCount: 0, imageUrl: ""},
+  // Electronics
+  {id: "prod7", name: "Bluetooth Speaker", price: 39.99, category: "electronics", stock: 120, active: true, description: "Portable waterproof Bluetooth speaker with 12-hour battery and deep bass.", tags: ["bluetooth", "audio", "portable"], rating: 4.4, reviewCount: 3, imageUrl: ""},
+  {id: "prod8", name: "USB-C Hub", price: 29.99, category: "electronics", stock: 250, active: true, description: "7-in-1 USB-C hub with HDMI, USB 3.0, SD card reader, and PD charging.", tags: ["usb", "hub", "adapter"], rating: 4.6, reviewCount: 5, imageUrl: ""},
+  {id: "prod9", name: "Wireless Mouse", price: 24.99, category: "electronics", stock: 400, active: true, description: "Ergonomic wireless mouse with silent clicks and adjustable DPI.", tags: ["mouse", "wireless", "ergonomic"], rating: 4.2, reviewCount: 2, imageUrl: ""},
+  {id: "prod10", name: "Mechanical Keyboard", price: 79.99, category: "electronics", stock: 60, active: true, description: "Compact mechanical keyboard with RGB backlighting and hot-swappable switches.", tags: ["keyboard", "mechanical", "RGB"], rating: 4.8, reviewCount: 7, imageUrl: ""},
+  // Kitchen
+  {id: "prod11", name: "French Press", price: 22.99, category: "kitchen", stock: 180, active: true, description: "Stainless steel French press coffee maker. Brews 4 cups in 4 minutes.", tags: ["coffee", "french press", "stainless steel"], rating: 4.5, reviewCount: 4, imageUrl: ""},
+  {id: "prod12", name: "Cutting Board Set", price: 28.99, category: "kitchen", stock: 90, active: true, description: "Set of 3 bamboo cutting boards in small, medium, and large sizes.", tags: ["bamboo", "cutting board", "cooking"], rating: 4.7, reviewCount: 2, imageUrl: ""},
+  {id: "prod13", name: "Water Bottle", price: 19.99, category: "kitchen", stock: 350, active: true, description: "Insulated stainless steel water bottle. Keeps drinks cold 24hrs or hot 12hrs.", tags: ["water bottle", "insulated", "stainless steel"], rating: 4.6, reviewCount: 6, imageUrl: ""},
+  // Sports
+  {id: "prod14", name: "Yoga Mat", price: 34.99, category: "sports", stock: 200, active: true, description: "Non-slip yoga mat with alignment lines. 6mm thick, eco-friendly TPE.", tags: ["yoga", "fitness", "mat"], rating: 4.4, reviewCount: 3, imageUrl: ""},
+  {id: "prod15", name: "Resistance Bands", price: 16.99, category: "sports", stock: 500, active: true, description: "Set of 5 resistance bands with different tension levels. Includes carry bag.", tags: ["resistance", "fitness", "bands"], rating: 4.3, reviewCount: 4, imageUrl: ""},
+  {id: "prod16", name: "Jump Rope", price: 12.99, category: "sports", stock: 300, active: true, description: "Adjustable speed jump rope with ball bearings and foam grip handles.", tags: ["cardio", "jump rope", "fitness"], rating: 4.1, reviewCount: 1, imageUrl: ""},
+  {id: "prod17", name: "Dumbbell Set", price: 64.99, category: "sports", stock: 0, active: false, description: "Adjustable dumbbell set from 5 to 25 lbs with storage tray.", tags: ["weights", "dumbbell", "strength"], rating: 4.5, reviewCount: 2, imageUrl: ""},
+  // Office
+  {id: "prod18", name: "Monitor Stand", price: 44.99, category: "office", stock: 130, active: true, description: "Bamboo monitor riser with storage drawer and phone holder.", tags: ["monitor", "desk", "organization"], rating: 4.7, reviewCount: 3, imageUrl: ""},
+  {id: "prod19", name: "Desk Organizer", price: 21.99, category: "office", stock: 220, active: true, description: "Mesh desk organizer with 6 compartments for pens, supplies, and files.", tags: ["organizer", "desk", "storage"], rating: 4.3, reviewCount: 1, imageUrl: ""},
+  {id: "prod20", name: "Whiteboard", price: 32.99, category: "office", stock: 85, active: true, description: "Magnetic dry-erase whiteboard 24x36 inches. Includes markers and eraser.", tags: ["whiteboard", "office", "planning"], rating: 4.4, reviewCount: 2, imageUrl: ""},
+  // Accessories
+  {id: "prod21", name: "Sunglasses", price: 27.99, category: "accessories", stock: 175, active: true, description: "Polarized UV400 sunglasses with lightweight metal frame.", tags: ["sunglasses", "UV protection", "polarized"], rating: 4.2, reviewCount: 3, imageUrl: ""},
+  {id: "prod22", name: "Leather Wallet", price: 35.99, category: "accessories", stock: 140, active: true, description: "Slim RFID-blocking leather wallet with 8 card slots and ID window.", tags: ["wallet", "leather", "RFID"], rating: 4.6, reviewCount: 4, imageUrl: ""},
+  {id: "prod23", name: "Phone Case", price: 15.99, category: "accessories", stock: 600, active: true, description: "Shockproof clear phone case with raised edges for camera protection.", tags: ["phone", "case", "protection"], rating: 4.0, reviewCount: 2, imageUrl: ""},
+  {id: "prod24", name: "Travel Mug", price: 18.99, category: "accessories", stock: 0, active: false, description: "Leak-proof travel mug with one-hand open lid. Fits most cup holders.", tags: ["travel", "mug", "insulated"], rating: 4.3, reviewCount: 1, imageUrl: ""},
 ];
 
 const orders = [
@@ -36,6 +59,23 @@ const reviews = [
   {productId: "prod2", id: "rev4", userName: "Dan Rivera", rating: 5, comment: "Bought this as a gift and they loved it. Very well made.", createdAt: new Date("2025-07-18")},
   {productId: "prod3", id: "rev5", userName: "Bob Martinez", rating: 4, comment: "Light and comfortable. Ran a half marathon in these no problem.", createdAt: new Date("2025-07-10")},
   {productId: "prod5", id: "rev6", userName: "Dan Rivera", rating: 5, comment: "The USB port is a game changer. Great lamp for late night work.", createdAt: new Date("2025-07-20")},
+  {productId: "prod7", id: "rev7", userName: "Bob Martinez", rating: 5, comment: "Took this to the beach and the sound was amazing. Waterproof too!", createdAt: new Date("2025-08-01")},
+  {productId: "prod7", id: "rev8", userName: "Carol Chen", rating: 4, comment: "Good bass for the size. Battery lasts all day.", createdAt: new Date("2025-08-05")},
+  {productId: "prod7", id: "rev9", userName: "Eve Park", rating: 4, comment: "Pairs easily with my phone. Great value.", createdAt: new Date("2025-08-10")},
+  {productId: "prod8", id: "rev10", userName: "Alice Johnson", rating: 5, comment: "Finally one hub that does everything. HDMI works perfectly.", createdAt: new Date("2025-08-02")},
+  {productId: "prod8", id: "rev11", userName: "Dan Rivera", rating: 5, comment: "Essential for my MacBook. SD card reader is fast.", createdAt: new Date("2025-08-08")},
+  {productId: "prod10", id: "rev12", userName: "Carol Chen", rating: 5, comment: "The typing feel is incredible. RGB looks great.", createdAt: new Date("2025-08-12")},
+  {productId: "prod10", id: "rev13", userName: "Alice Johnson", rating: 5, comment: "Hot-swap switches are a game changer. Love customizing it.", createdAt: new Date("2025-08-15")},
+  {productId: "prod11", id: "rev14", userName: "Bob Martinez", rating: 4, comment: "Makes great coffee. Cleanup is a breeze.", createdAt: new Date("2025-08-03")},
+  {productId: "prod11", id: "rev15", userName: "Eve Park", rating: 5, comment: "Best French press I've used. Sturdy stainless steel.", createdAt: new Date("2025-08-11")},
+  {productId: "prod13", id: "rev16", userName: "Carol Chen", rating: 5, comment: "Keeps water ice cold all day at the gym.", createdAt: new Date("2025-08-04")},
+  {productId: "prod13", id: "rev17", userName: "Dan Rivera", rating: 4, comment: "Great bottle but a bit heavy when full.", createdAt: new Date("2025-08-09")},
+  {productId: "prod14", id: "rev18", userName: "Alice Johnson", rating: 5, comment: "Non-slip grip is excellent. Alignment lines help with poses.", createdAt: new Date("2025-08-06")},
+  {productId: "prod14", id: "rev19", userName: "Eve Park", rating: 4, comment: "Good thickness, comfortable on hardwood floors.", createdAt: new Date("2025-08-14")},
+  {productId: "prod15", id: "rev20", userName: "Bob Martinez", rating: 4, comment: "Great variety of resistance levels. Perfect for travel workouts.", createdAt: new Date("2025-08-07")},
+  {productId: "prod18", id: "rev21", userName: "Dan Rivera", rating: 5, comment: "Looks great on my desk. Drawer is super handy.", createdAt: new Date("2025-08-13")},
+  {productId: "prod22", id: "rev22", userName: "Alice Johnson", rating: 5, comment: "Slim but holds everything. RFID blocking is a nice touch.", createdAt: new Date("2025-08-16")},
+  {productId: "prod22", id: "rev23", userName: "Bob Martinez", rating: 4, comment: "Quality leather, smells great. Cards slide in easily.", createdAt: new Date("2025-08-18")},
 ];
 
 const config = {
@@ -89,7 +129,7 @@ async function seed() {
   console.log(`  ${users.length} users`);
   console.log(`  ${products.length} products`);
   console.log(`  ${orders.length} orders`);
-  console.log(`  ${reviews.length} reviews`);
+  console.log(`  ${reviews.length} reviews (across multiple products)`);
   console.log(`  1 config document`);
 }
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db, googleProvider } from "../../lib/firebase";
 import { useAuth } from "../../components/AuthProvider";
@@ -28,6 +28,7 @@ export default function LoginPage() {
 
     try {
       if (isSignUp) {
+        //Create user with email and password
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         if (displayName) {
           await updateProfile(cred.user, { displayName });
@@ -41,6 +42,7 @@ export default function LoginPage() {
         });
         showToast("Account created!");
       } else {
+        //Sign in with existing user
         await signInWithEmailAndPassword(auth, email, password);
         showToast("Signed in!");
       }
@@ -110,6 +112,29 @@ export default function LoginPage() {
               {loading ? "Please wait..." : isSignUp ? "Sign Up" : "Sign In"}
             </button>
           </form>
+
+          {!isSignUp && (
+            <p style={{ textAlign: "center", marginTop: "12px" }}>
+              <button
+                type="button"
+                className="link-btn"
+                onClick={async () => {
+                  if (!email) {
+                    showToast("Enter your email first");
+                    return;
+                  }
+                  try {
+                    await sendPasswordResetEmail(auth, email);
+                    showToast("Password reset email sent! Check your inbox.");
+                  } catch (err) {
+                    showToast("Could not send reset email");
+                  }
+                }}
+              >
+                Forgot password?
+              </button>
+            </p>
+          )}
 
           <div style={{ textAlign: "center", margin: "20px 0", color: "var(--text-light)" }}>or</div>
 
