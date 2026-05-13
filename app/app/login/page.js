@@ -7,6 +7,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { auth, db, googleProvider } from "../../lib/firebase";
 import { useAuth } from "../../components/AuthProvider";
 import Toast, { showToast } from "../../components/Toast";
+import { logAnalyticsEvent } from "../../lib/analytics";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -40,10 +41,12 @@ export default function LoginPage() {
           orderCount: 0,
           createdAt: new Date(),
         });
+        logAnalyticsEvent("sign_up", { method: "password" });
         showToast("Account created!");
       } else {
         //Sign in with existing user
         await signInWithEmailAndPassword(auth, email, password);
+        logAnalyticsEvent("login", { method: "password" });
         showToast("Signed in!");
       }
       router.push("/");
@@ -144,6 +147,7 @@ export default function LoginPage() {
             onClick={async () => {
               try {
                 await signInWithPopup(auth, googleProvider);
+                logAnalyticsEvent("login", { method: "google" });
                 showToast("Signed in with Google!");
                 router.push("/");
               } catch (err) {

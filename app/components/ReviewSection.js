@@ -6,6 +6,7 @@ import { renderStars } from "../lib/utils";
 import { apiPost } from "../lib/api";
 import { showToast } from "./Toast";
 import { useAuth } from "./AuthProvider";
+import { logAnalyticsEvent } from "../lib/analytics";
 
 export default function ReviewSection({ productId, initialReviews }) {
   const { user } = useAuth();
@@ -32,6 +33,10 @@ export default function ReviewSection({ productId, initialReviews }) {
         { userName, rating: parseInt(rating), comment, createdAt: new Date().toISOString() },
         ...reviews,
       ]);
+      logAnalyticsEvent("submit_review", {
+        product_id: productId,
+        rating: parseInt(rating),
+      });
       setRating("5");
       setComment("");
       showToast("Review submitted!");

@@ -7,6 +7,7 @@ import { formatPrice } from "../../lib/utils";
 import { apiPost } from "../../lib/api";
 import Toast, { showToast } from "../../components/Toast";
 import { useAuth } from "../../components/AuthProvider";
+import { logAnalyticsEvent } from "../../lib/analytics";
 
 const TAX_RATE = 0.08;
 
@@ -54,6 +55,17 @@ export default function CartPage() {
 
     try {
       const result = await apiPost("/orders", { items, customer, uid: user.uid });
+      logAnalyticsEvent("purchase", {
+        transaction_id: result.orderId,
+        currency: "USD",
+        value: result.total,
+        items: cart.map((item) => ({
+          item_id: item.productId,
+          item_name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+      });
       clearCart();
       setCart([]);
       setOrder({ id: result.orderId, total: result.total, customerName: customer.name });
