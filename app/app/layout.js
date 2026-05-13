@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { AuthProvider } from "../components/AuthProvider";
 import AnalyticsProvider from "../components/AnalyticsProvider";
+import PerformanceProvider from "../components/PerformanceProvider";
 
 export const metadata = {
   title: "Acme Shop",
@@ -15,6 +16,7 @@ export default function RootLayout({ children }) {
       <body>
         <AuthProvider>
           <AnalyticsProvider />
+          <PerformanceProvider />
           <Header />
           {children}
           <Footer />

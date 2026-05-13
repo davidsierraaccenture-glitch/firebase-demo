@@ -8,6 +8,7 @@ import { apiPost } from "../../lib/api";
 import Toast, { showToast } from "../../components/Toast";
 import { useAuth } from "../../components/AuthProvider";
 import { logAnalyticsEvent } from "../../lib/analytics";
+import { startTrace } from "../../lib/performance";
 
 const TAX_RATE = 0.08;
 
@@ -53,8 +54,12 @@ export default function CartPage() {
       },
     };
 
+    const checkoutTrace = startTrace("checkout_order");
+    checkoutTrace.putAttribute("item_count", String(items.length));
+
     try {
       const result = await apiPost("/orders", { items, customer, uid: user.uid });
+      checkoutTrace.stop();
       logAnalyticsEvent("purchase", {
         transaction_id: result.orderId,
         currency: "USD",
@@ -70,6 +75,7 @@ export default function CartPage() {
       setCart([]);
       setOrder({ id: result.orderId, total: result.total, customerName: customer.name });
     } catch (err) {
+      checkoutTrace.stop();
       showToast("Failed to place order. Please try again.");
       console.error(err);
       setSubmitting(false);
